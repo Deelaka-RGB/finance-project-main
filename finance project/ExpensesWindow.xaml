@@ -1,0 +1,232 @@
+﻿<Window x:Class="finance_project.ExpensesWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Manage Expenses" Height="720" Width="1100"
+        WindowStartupLocation="CenterOwner" Background="#0F172A" ResizeMode="CanResize">
+
+    <!-- =================== THEME & STYLES =================== -->
+    <Window.Resources>
+        <!-- Palette -->
+        <SolidColorBrush x:Key="BgDark"  Color="#0F172A"/>
+        <SolidColorBrush x:Key="Card"    Color="#111827"/>
+        <SolidColorBrush x:Key="Card2"   Color="#0B1220"/>
+        <SolidColorBrush x:Key="Accent"  Color="#3B82F6"/>
+        <SolidColorBrush x:Key="Text"    Color="#E5E7EB"/>
+        <SolidColorBrush x:Key="TextDim" Color="#94A3B8"/>
+
+        <!-- Cards -->
+        <Style x:Key="CardStyle" TargetType="Border">
+            <Setter Property="CornerRadius" Value="18"/>
+            <Setter Property="Background" Value="{StaticResource Card}"/>
+            <Setter Property="Padding" Value="18"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="20" ShadowDepth="0" Color="#99000000" Opacity="0.6"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Text -->
+        <Style x:Key="H2" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource Text}"/>
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+        <Style x:Key="Muted" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource TextDim}"/>
+            <Setter Property="FontSize" Value="13"/>
+        </Style>
+
+        <!-- Buttons -->
+        <Style x:Key="PrimaryBtn" TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource Accent}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Padding" Value="10,6"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="MinWidth" Value="90"/>
+            <Setter Property="Height" Value="34"/>
+            <Setter Property="Margin" Value="0,0,8,0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border CornerRadius="8"
+                                Background="{TemplateBinding Background}"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#2563EB"/>
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Opacity" Value="0.6"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="GhostBtn" TargetType="Button" BasedOn="{StaticResource PrimaryBtn}">
+            <Setter Property="Background" Value="#334155"/>
+            <Setter Property="Foreground" Value="{StaticResource Text}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource Accent}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#475569"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Inputs -->
+        <Style x:Key="InputBase" TargetType="Control">
+            <Setter Property="Foreground" Value="{StaticResource Text}"/>
+        </Style>
+
+        <Style x:Key="TextBoxStyle" TargetType="TextBox" BasedOn="{StaticResource InputBase}">
+            <Setter Property="Background" Value="#1A2335"/>
+            <Setter Property="BorderBrush" Value="#334155"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="6,4"/>
+            <Setter Property="CaretBrush" Value="#3B82F6"/>
+        </Style>
+
+        <Style x:Key="ComboBoxStyle" TargetType="ComboBox" BasedOn="{StaticResource InputBase}">
+            <Setter Property="Background" Value="#1A2335"/>
+            <Setter Property="BorderBrush" Value="#334155"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="4,3"/>
+        </Style>
+
+        <Style x:Key="DatePickerStyle" TargetType="DatePicker" BasedOn="{StaticResource InputBase}">
+            <Setter Property="Background" Value="#1A2335"/>
+            <Setter Property="BorderBrush" Value="#334155"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+
+        <!-- DataGrid -->
+        <Style x:Key="DataGridStyle" TargetType="DataGrid">
+            <Setter Property="Foreground" Value="{StaticResource Text}"/>
+            <Setter Property="Background" Value="#111827"/>
+            <Setter Property="RowBackground" Value="#1A2335"/>
+            <Setter Property="AlternatingRowBackground" Value="#0F172A"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="GridLinesVisibility" Value="None"/>
+            <Setter Property="HorizontalGridLinesBrush" Value="#223"/>
+            <Setter Property="VerticalGridLinesBrush" Value="#223"/>
+            <Setter Property="RowHeaderWidth" Value="0"/>
+            <Setter Property="CellStyle">
+                <Setter.Value>
+                    <Style TargetType="DataGridCell">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="BorderThickness" Value="0"/>
+                        <Setter Property="Padding" Value="6,4"/>
+                        <Setter Property="Foreground" Value="{StaticResource Text}"/>
+                        <Setter Property="FontSize" Value="13"/>
+                        <Setter Property="FontFamily" Value="Segoe UI"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="#3B82F6"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    <!-- ================= END THEME & STYLES ================= -->
+
+    <Grid Background="{StaticResource BgDark}" Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header / toolbar -->
+        <Border Grid.Row="0" Style="{StaticResource CardStyle}" Background="{StaticResource Card2}">
+            <DockPanel LastChildFill="False">
+                <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
+                    <TextBlock Text="Manage Expenses" Style="{StaticResource H2}" VerticalAlignment="Center"/>
+                    <TextBlock Text="  •  Add  •  Edit  •  Delete  •  Export"
+                               Style="{StaticResource Muted}" Margin="8,2,0,0"/>
+                </StackPanel>
+
+                <!-- Filters -->
+                <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+                    <TextBox x:Name="SearchBox" Style="{StaticResource TextBoxStyle}"
+                             Width="220" Margin="0,0,8,0"
+                             ToolTip="Search description/category..."
+                             TextChanged="SearchBox_TextChanged"/>
+                    <ComboBox x:Name="CategoryFilter" Style="{StaticResource ComboBoxStyle}"
+                              Width="140" Margin="0,0,8,0"
+                              SelectionChanged="CategoryFilter_SelectionChanged"/>
+                    <DatePicker x:Name="MonthFilter" Style="{StaticResource DatePickerStyle}"
+                                Width="150" SelectedDateChanged="MonthFilter_SelectedDateChanged"/>
+                    <Button Content="Reset" Style="{StaticResource GhostBtn}" Click="ResetFilters_Click"/>
+                </StackPanel>
+            </DockPanel>
+        </Border>
+
+        <!-- Body -->
+        <Grid Grid.Row="1" Margin="0,12,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Table -->
+            <Border Grid.Column="0" Style="{StaticResource CardStyle}">
+                <DockPanel>
+                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="0,0,0,10">
+                        <Button Content="Add"    Style="{StaticResource PrimaryBtn}" Click="Add_Click"/>
+                        <Button Content="Update" Style="{StaticResource GhostBtn}"  Click="Update_Click"/>
+                        <Button Content="Delete" Style="{StaticResource GhostBtn}"  Click="Delete_Click"/>
+                        <Button Content="Export CSV" Style="{StaticResource GhostBtn}" Click="Export_Click"/>
+                    </StackPanel>
+
+                    <DataGrid x:Name="GridExpenses" Style="{StaticResource DataGridStyle}"
+                              AutoGenerateColumns="False" IsReadOnly="True"
+                              SelectionMode="Single" Margin="0,10,0,0">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Date"
+                                Binding="{Binding Date, StringFormat=\{0:yyyy-MM-dd\}}" Width="120"/>
+                            <DataGridTextColumn Header="Category" Binding="{Binding Category}" Width="150"/>
+                            <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="*"/>
+                            <DataGridTextColumn Header="Amount (Rs.)"
+                                Binding="{Binding Amount, StringFormat=\{0:N2\}}" Width="150"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DockPanel>
+            </Border>
+
+            <!-- Form -->
+            <Border Grid.Column="1" Style="{StaticResource CardStyle}">
+                <StackPanel>
+                    <TextBlock Text="Expense Details" Style="{StaticResource H2}" Margin="0,0,0,10"/>
+
+                    <TextBlock Text="Date" Style="{StaticResource Muted}"/>
+                    <DatePicker x:Name="InpDate" Style="{StaticResource DatePickerStyle}" Margin="0,4,0,10"/>
+
+                    <TextBlock Text="Category" Style="{StaticResource Muted}"/>
+                    <ComboBox x:Name="InpCategory" Style="{StaticResource ComboBoxStyle}" Margin="0,4,0,10"/>
+
+                    <TextBlock Text="Description" Style="{StaticResource Muted}"/>
+                    <TextBox x:Name="InpDesc" Style="{StaticResource TextBoxStyle}" Margin="0,4,0,10"
+                             AcceptsReturn="True" Height="80" TextWrapping="Wrap"/>
+
+                    <TextBlock Text="Amount (Rs.)" Style="{StaticResource Muted}"/>
+                    <TextBox x:Name="InpAmount" Style="{StaticResource TextBoxStyle}" Margin="0,4,0,14"/>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Content="Save"  Style="{StaticResource PrimaryBtn}" Click="Save_Click"/>
+                        <Button Content="Clear" Style="{StaticResource GhostBtn}"   Click="Clear_Click"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>
